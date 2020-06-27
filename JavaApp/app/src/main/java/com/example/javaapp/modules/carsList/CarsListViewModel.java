@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.javaapp.data.base_response.BaseResponse;
 import com.example.javaapp.data.car.Car;
+import com.example.javaapp.data.car.CarResponse;
 import com.example.javaapp.data.car.source.CarRepository;
 
 import java.util.ArrayList;
@@ -27,17 +28,11 @@ public class CarsListViewModel extends ViewModel {
     private CompositeDisposable disposable;
     private final MutableLiveData<CarsListResult> firstList = new MutableLiveData<>();
     private final MutableLiveData<CarsListResult> newCars = new MutableLiveData<>();
-    private int allCurrentTripsCount = 0;
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
     private MutableLiveData<String> errorMessages = new MutableLiveData<>();
     private int pageNumber = 1;
-    private final MutableLiveData<Boolean> dismissDialog = new MutableLiveData<>();
     private Boolean fromLoadMore;
     private Boolean loadMore = true;
-
-    LiveData<Boolean> getDismissLoading() {
-        return dismissDialog;
-    }
 
     public LiveData<Boolean> getLoading() {
         return loading;
@@ -73,10 +68,10 @@ public class CarsListViewModel extends ViewModel {
         disposable.add(carRepository.getCarsList(pageNumber)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<BaseResponse<Car>>() {
+                .subscribeWith(new DisposableSingleObserver<CarResponse>() {
 
                     @Override
-                    public void onSuccess(BaseResponse<Car> resultsResponse) {
+                    public void onSuccess(CarResponse resultsResponse) {
                         loading.setValue(false);
 
                         if (resultsResponse != null) {
@@ -106,11 +101,9 @@ public class CarsListViewModel extends ViewModel {
         }
 
         if (fromLoadMore) {
-            allCurrentTripsCount += toBindList.size();
             newCars.setValue(new CarsListResult(toBindList, result,
                     loadMore));
         } else {
-            allCurrentTripsCount = toBindList.size();
             firstList.setValue(new CarsListResult(toBindList, result,
                     loadMore));
         }
@@ -120,10 +113,6 @@ public class CarsListViewModel extends ViewModel {
         pageNumber++;
         fromLoadMore = true;
         getData();
-    }
-
-    public void dismissDialog(View view) {
-        dismissDialog.setValue(true);
     }
 
     @Override

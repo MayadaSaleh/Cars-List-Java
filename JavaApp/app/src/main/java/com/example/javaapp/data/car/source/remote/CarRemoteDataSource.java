@@ -2,6 +2,7 @@ package com.example.javaapp.data.car.source.remote;
 
 import com.example.javaapp.data.base_response.BaseResponse;
 import com.example.javaapp.data.car.Car;
+import com.example.javaapp.data.car.CarResponse;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,7 @@ public class CarRemoteDataSource {
         this.carRetrofitService = carRetrofitService;
     }
 
-    public Single<BaseResponse<Car>> getCarsList(int pageNumber) {
+    public Single<CarResponse> getCarsList(int pageNumber) {
         return carRetrofitService.getCarsList(pageNumber);
     }
 
