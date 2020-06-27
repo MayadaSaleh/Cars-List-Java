@@ -6,10 +6,11 @@ import com.example.javaapp.data.car.Car;
 import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface CarRetrofitService {
 
-    @GET("CompanyUsers")
-    Single<BaseResponse<Car>> getCarsList(@Path("page") int pageNumber);
+    @GET("cars?")
+    Single<BaseResponse<Car>> getCarsList(@Query("page") int pageNumber);
 
 }
